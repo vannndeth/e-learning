@@ -7,6 +7,8 @@ import co.istad.elearningmanagement.features.category.dto.CategoryUpdateRequest;
 import co.istad.elearningmanagement.features.category.dto.PopularCategoryResponse;
 import org.mapstruct.*;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring", uses = {CustomMapper.class})
 public interface CategoryMapper {
 
@@ -22,5 +24,7 @@ public interface CategoryMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void mapCategoryUpdateRequest(@MappingTarget Category category, CategoryUpdateRequest categoryUpdateRequest);
+
+    List<PopularCategoryResponse> toPopularCategoryResponseList(List<Category> categories);
 
 }

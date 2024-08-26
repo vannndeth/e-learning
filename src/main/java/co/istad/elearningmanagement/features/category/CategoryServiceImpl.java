@@ -1,7 +1,6 @@
 package co.istad.elearningmanagement.features.category;
 
 import co.istad.elearningmanagement.domain.Category;
-import co.istad.elearningmanagement.domain.Course;
 import co.istad.elearningmanagement.features.category.dto.CategoryCreateRequest;
 import co.istad.elearningmanagement.features.category.dto.CategoryResponse;
 import co.istad.elearningmanagement.features.category.dto.CategoryUpdateRequest;
@@ -9,18 +8,12 @@ import co.istad.elearningmanagement.features.category.dto.PopularCategoryRespons
 import co.istad.elearningmanagement.features.course.CourseRepository;
 import co.istad.elearningmanagement.mapper.CategoryMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.AggregationResults;
-import org.springframework.data.mongodb.core.aggregation.SortOperation;
-import org.springframework.stereotype.Service;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -70,9 +63,22 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<PopularCategoryResponse> getPopularCategories() {
-        return categoryRepository.findAll().stream()
-                .map(categoryMapper::mapToPopularCategoryResponse)
-                .collect(Collectors.toList());
+
+        List<Category> categories = categoryRepository.findAll();
+
+        return categories.stream().map(category -> {
+
+            int totalCourse = courseRepository.countByCategory(category.getName());
+
+            return PopularCategoryResponse.builder()
+                    .name(category.getName())
+                    .icon(category.getIcon())
+                    .totalCourses(totalCourse)
+                    .build();
+            })
+            .sorted((category1, category2) -> category2.totalCourses().compareTo(category1.totalCourses()))
+            .toList();
+
     }
 
     @Override

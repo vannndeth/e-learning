@@ -20,7 +20,11 @@ public class CustomMapper {
 
     @Named("mapTotalCourse")
     public Integer mapTotalCourse(String categoryId) {
-        return courseRepository.countByCategory(categoryId);
+        // Add logging here to check if the categoryId is being correctly passed
+        System.out.println("Counting courses for category ID: " + categoryId);
+        Integer count = courseRepository.countByCategory(categoryId);
+        System.out.println("Total courses found: " + count);
+        return count;
     }
 
     @Named("mapSectionResponse")

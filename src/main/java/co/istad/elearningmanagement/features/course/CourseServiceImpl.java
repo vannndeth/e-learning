@@ -25,6 +25,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,7 +53,10 @@ public class CourseServiceImpl implements CourseService {
 
         Course course = courseMapper.mapRequestToCourse(courseCreateRequest);
 
+        course.setDiscount(0);
         course.setCategory(category.getName());
+        course.setCreatedAt(LocalDateTime.now());
+        course.setUpdatedAt(LocalDateTime.now());
         course.setIsDrafted(true);
         course.setIsPaid(false);
         courseRepository.save(course);
@@ -259,6 +263,7 @@ public class CourseServiceImpl implements CourseService {
         Course course = courseRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Course doesn't exist!"));
 
+        course.setUpdatedAt(LocalDateTime.now());
         courseMapper.mapCourseUpdateRequest(course, courseUpdateRequest);
         courseRepository.save(course);
     }

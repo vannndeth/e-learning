@@ -18,5 +18,8 @@ public interface CourseRepository extends MongoRepository<Course, String> {
 
     Page<Course> findByIsDraftedTrue(Pageable pageable);
 
-    Integer countByCategory(String categoryId);
+    Integer countByCategory(String category);
+
+    List<Course> findAllByCategoryAndIsDisabledFalse(String categoryName);
+
 }
