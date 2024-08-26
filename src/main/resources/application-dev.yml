@@ -1,0 +1,7 @@
+
+DB_USERNAME: root
+DB_PASSWORD: root
+DB_HOST: localhost
+DB_PORT: 28000
+DB_NAME: db-elearning
+AUTHENTICATION-DATABASE: admin
